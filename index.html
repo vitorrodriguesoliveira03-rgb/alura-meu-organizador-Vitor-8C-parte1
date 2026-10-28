@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORGANIZADOR DO VITOR</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Ícones do FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Elementos 3D de fundo (Esferas e Cubos flutuantes) -->
+  <div class="bg-3d-container">
+    <div class="shape cube shape-1"></div>
+    <div class="shape sphere shape-2"></div>
+    <div class="shape cube shape-3"></div>
+    <div class="shape sphere shape-4"></div>
+    <div class="shape cube shape-5"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Cabeçalho -->
+    <header class="header">
+      <h1 class="glitch-title">ORGANIZADOR DO VITOR</h1>
+      <p class="subtitle">Seu portal de alta performance para gerenciar tarefas, hábitos e otimizar sua rotina diária.</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Seção do Organizador de Tarefas -->
+      <section class="task-section">
+        <h2><i class="fa-solid fa-list-check"></i> Minhas Tarefas & Rotina</h2>
+        
+        <form id="task-form" class="task-input-group">
+          <input type="text" id="task-input" placeholder="Digite uma nova tarefa..." required>
+          <select id="task-category">
+            <option value="Trabalho">Trabalho</option>
+            <option value="Estudos">Estudos</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Pessoal">Pessoal</option>
+          </select>
+          <button type="submit" class="btn-add"><i class="fa-solid fa-plus"></i> Adicionar</button>
+        </form>
+
+        <ul id="task-list" class="task-list">
+          <!-- Exemplo de tarefa pré-carregada -->
+          <li class="task-item">
+            <div class="task-info">
+              <span class="category-badge">Pessoal</span>
+              <span class="task-text">Organizar espaço de trabalho e definir prioridades do dia</span>
+            </div>
+            <div class="task-actions">
+              <button class="btn-complete" onclick="toggleTask(this)"><i class="fa-solid fa-check"></i></button>
+              <button class="btn-delete" onclick="deleteTask(this)"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Seção de Cards de Dicas -->
+      <section class="tips-section">
+        <h2><i class="fa-solid fa-lightbulb"></i> Dicas de Produtividade & Alta Performance</h2>
+        <div class="cards-grid">
+
+          <!-- Card 1 -->
+          <div class="tip-card" onclick="openModal('tip1')">
+            <div class="card-icon"><i class="fa-solid fa-clock"></i></div>
+            <h3>Técnica Pomodoro</h3>
+            <p>Aumente seu foco intercalando blocos de trabalho intenso com descansos estratégicos.</p>
+            <span class="card-more">Clique para ver mais <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="tip-card" onclick="openModal('tip2')">
+            <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <h3>Regra dos 2 Minutos</h3>
+            <p>Se uma tarefa leva menos de dois minutos para ser concluída, faça-a imediatamente.</p>
+            <span class="card-more">Clique para ver mais <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="tip-card" onclick="openModal('tip3')">
+            <div class="card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+            <h3>Matriz de Eisenhower</h3>
+            <p>Aprenda a priorizar suas atividades entre o que é Urgente e o que é Importante.</p>
+            <span class="card-more">Clique para ver mais <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="tip-card" onclick="openModal('tip4')">
+            <div class="card-icon"><i class="fa-solid fa-bed"></i></div>
+            <h3>Higiene do Sono</h3>
+            <p>Sua produtividade diária começa com uma noite de descanso reparadora e de alta qualidade.</p>
+            <span class="card-more">Clique para ver mais <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Estrutura do Modal Interativo -->
+  <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeModalDirect()">×</button>
+      <div id="modal-body">
+        <!-- Conteúdo dinâmico inserido via JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Gerenciamento de Tarefas
+    document.getElementById('task-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const input = document.getElementById('task-input');
+      const category = document.getElementById('task-category').value;
+      const text = input.value.trim();
+
+      if (text !== '') {
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.innerHTML = `
+          <div class="task-info">
+            <span class="category-badge">${category}</span>
+            <span class="task-text">${text}</span>
+          </div>
+          <div class="task-actions">
+            <button class="btn-complete" onclick="toggleTask(this)"><i class="fa-solid fa-check"></i></button>
+            <button class="btn-delete" onclick="deleteTask(this)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `;
+        document.getElementById('task-list').appendChild(li);
+        input.value = '';
+      }
+    });
+
+    function toggleTask(button) {
+      const item = button.closest('.task-item');
+      item.classList.toggle('completed');
+    }
+
+    function deleteTask(button) {
+      const item = button.closest('.task-item');
+      item.remove();
+    }
+
+    // Dados das Dicas para o Modal
+    const tipsData = {
+      tip1: {
+        title: "Técnica Pomodoro",
+        icon: "fa-clock",
+        content: `
+          <p><strong>Como funciona:</strong> Trabalhe com foco total por 25 minutos (um "Pomodoro") e, em seguida, faça uma pausa curta de 5 minutos. Após 4 blocos, faça uma pausa mais longa (15 a 30 minutos).</p>
+          <h4>Benefícios:</h4>
+          <ul>
+            <li>Evita o cansaço mental e o burnout.</li>
+            <li>Melhora drasticamente a capacidade de concentração.</li>
+            <li>Ajuda a mensurar com precisão quanto tempo cada tarefa consome.</li>
+          </ul>
+        `
+      },
+      tip2: {
+        title: "Regra dos 2 Minutos",
+        icon: "fa-bullseye",
+        content: `
+          <p><strong>Como funciona:</strong> Originada do método GTD (Getting Things Done), diz que se uma tarefa surge no seu dia e leva 2 minutos ou menos para ser feita (ex: responder um e-mail rápido, arrumar a mesa, guardar um documento), faça na hora.</p>
+          <h4>Benefícios:</h4>
+          <ul>
+            <li>Elimina o acúmulo de pequenas pendências.</li>
+            <li>Reduz a sobrecarga mental de lembrar pequenas obrigações.</li>
+            <li>Cria uma sensação constante de progresso e conquista.</li>
+          </ul>
+        `
+      },
+      tip3: {
+        title: "Matriz de Eisenhower",
+        icon: "fa-chart-pie",
+        content: `
+          <p><strong>Como funciona:</strong> Divida suas tarefas em 4 quadrantes baseados em Urgência e Importância:</p>
+          <ul>
+            <li><strong>Urgente + Importante:</strong> Faça agora.</li>
+            <li><strong>Não Urgente + Importante:</strong> Agende para fazer.</li>
+            <li><strong>Urgente + Não Importante:</strong> Delegue se possível.</li>
+            <li><strong>Não Urgente + Não Importante:</strong> Elimine.</li>
+          </ul>
+        `
+      },
+      tip4: {
+        title: "Higiene do Sono & Energia",
+        icon: "fa-bed",
+        content: `
+          <p><strong>Como funciona:</strong> Ter um dia produtivo começa na noite anterior. Defina horários fixos para dormir e acordar, e evite telas de luz azul pelo menos 1 hora antes de deitar.</p>
+          <h4>Dicas Práticas:</h4>
+          <ul>
+            <li>Mantenha o quarto escuro e em temperatura agradável.</li>
+            <li>Evite cafeína após as 14h.</li>
+            <li>Crie um ritual noturno para desacelerar a mente.</li>
+          </ul>
+        `
+      }
+    };
+
+    // Controle do Modal
+    function openModal(tipId) {
+      const modal = document.getElementById('modal-overlay');
+      const body = document.getElementById('modal-body');
+      const data = tipsData[tipId];
+
+      if (data) {
+        body.innerHTML = `
+          <div class="modal-header">
+            <i class="fa-solid ${data.icon} modal-icon"></i>
+            <h2>${data.title}</h2>
+          </div>
+          <div class="modal-text">
+            ${data.content}
+          </div>
+        `;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeModal(event) {
+      if (event.target.id === 'modal-overlay') {
+        closeModalDirect();
+      }
+    }
+
+    function closeModalDirect() {
+      const modal = document.getElementById('modal-overlay');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  </script>
+</body>
+</html>
